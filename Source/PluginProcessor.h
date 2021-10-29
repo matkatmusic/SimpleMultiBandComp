@@ -9,15 +9,21 @@
 #pragma once
 
 /*
- DSP Roadmap
- 1) figure out how to split the audio into 3 bands DONE
- 2) create parameters to control where this split happens. DONE
- 3) prove that splitting into 3 bands produces no audible artifacts DONE
- 4) create audio parameters for the 3 compressor bands. these need to live on each band instance. DONE
- 5) add 2 remaining compressors. DONE
- 6) add ability to mute/solo/bypass individual compressors DONE
- 7) add input and output gain to offset changes in output level DONE
- 8) clean up anything that needs cleaning up.
+GUI RoadMap:
+ 1) Global Controls (x-over sliders, gain sliders)
+ 2) Main Band Controls (attack, release, threshold, ratio)
+ 3) add solo/mute/bypass buttons
+ 4) Band Select Functionality
+ 5) Band Select Buttons reflect the Solo/Mute/Bypass state
+ 6) Custom Look and Feel for Sliders and Toggle Buttons.
+ 7) Spectrum Analyzer Overview
+ 8) Data Structures for Spectrum Analyzer.
+ 9) Fifo usage in pluginProcessor::processBlock
+ 10) implementation of the analyzer rendering pre-computed paths.
+ 11) Drawing crossovers on top of the Analyzer Plot
+ 12) Drawing gain reduction on top of the analyzer
+ 13) Analyzer Bypass.
+ 14) Global Bypass button
  
  
  */
