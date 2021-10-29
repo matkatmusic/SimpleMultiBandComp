@@ -163,6 +163,14 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
     
     auto sliderBounds = getSliderBounds();
     
+    auto bounds = getLocalBounds();
+    
+    g.setColour(Colours::blueviolet);
+    g.drawFittedText(getName(),
+                     bounds.removeFromTop(getTextHeight() + 2),
+                     Justification::centredBottom,
+                     1);
+    
 //    g.setColour(Colours::red);
 //    g.drawRect(getLocalBounds());
 //    g.setColour(Colours::yellow);
@@ -210,13 +218,16 @@ juce::Rectangle<int> RotarySliderWithLabels::getSliderBounds() const
 {
     auto bounds = getLocalBounds();
     
+    bounds.removeFromTop(getTextHeight() * 1.5);
+    
     auto size = juce::jmin(bounds.getWidth(), bounds.getHeight());
     
-    size -= getTextHeight() * 2;
+    size -= getTextHeight() * 1.5;
     juce::Rectangle<int> r;
     r.setSize(size, size);
     r.setCentre(bounds.getCentreX(), 0);
-    r.setY(2);
+//    r.setY(2);
+    r.setY(bounds.getY());
     
     return r;
     
@@ -275,10 +286,23 @@ GlobalControls::GlobalControls(juce::AudioProcessorValueTreeState& apvts)
         return getParam(apvts, params, name);
     };
     
-    inGainSlider = std::make_unique<RSWL>(getParamHelper(Names::Gain_In), "dB");
-    lowMidXoverSlider = std::make_unique<RSWL>(getParamHelper(Names::Low_Mid_Crossover_Freq), "Hz");
-    midHighXoverSlider = std::make_unique<RSWL>(getParamHelper(Names::Mid_High_Crossover_Freq), "Hz");
-    outGainSlider = std::make_unique<RSWL>(getParamHelper(Names::Gain_Out), "dB");
+    auto& gainInParam = getParamHelper(Names::Gain_In);
+    auto& lowMidParam = getParamHelper(Names::Low_Mid_Crossover_Freq);
+    auto& midHighParam = getParamHelper(Names::Mid_High_Crossover_Freq);
+    auto& gainOutParam = getParamHelper(Names::Gain_Out);
+    
+    inGainSlider = std::make_unique<RSWL>(gainInParam,
+                                          "dB",
+                                          "INPUT TRIM");
+    lowMidXoverSlider = std::make_unique<RSWL>(lowMidParam,
+                                               "Hz",
+                                               "LOW-MID X-OVER");
+    midHighXoverSlider = std::make_unique<RSWL>(midHighParam,
+                                                "Hz",
+                                                "MID-HI X-OVER");
+    outGainSlider = std::make_unique<RSWL>(gainOutParam,
+                                           "dB",
+                                           "OUTPUT TRIM");
     
     
     auto makeAttachmentHelper = [&params, &apvts](auto& attachment,
@@ -305,16 +329,16 @@ GlobalControls::GlobalControls(juce::AudioProcessorValueTreeState& apvts)
                          *outGainSlider);
     
     addLabelPairs(inGainSlider->labels,
-                  getParamHelper(Names::Gain_In),
+                  gainInParam,
                   "dB");
     addLabelPairs(lowMidXoverSlider->labels,
-                  getParamHelper(Names::Low_Mid_Crossover_Freq),
+                  lowMidParam,
                   "Hz");
     addLabelPairs(midHighXoverSlider->labels,
-                  getParamHelper(Names::Mid_High_Crossover_Freq),
+                  midHighParam,
                   "Hz");
     addLabelPairs(outGainSlider->labels,
-                  getParamHelper(Names::Gain_Out),
+                  gainOutParam,
                   "dB");
     
     addAndMakeVisible(*inGainSlider);

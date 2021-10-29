@@ -28,12 +28,15 @@ struct LookAndFeel : juce::LookAndFeel_V4
 
 struct RotarySliderWithLabels : juce::Slider
 {
-    RotarySliderWithLabels(juce::RangedAudioParameter& rap, const juce::String& unitSuffix) :
+    RotarySliderWithLabels(juce::RangedAudioParameter& rap,
+                           const juce::String& unitSuffix,
+                           const juce::String& title /*= "NO TITLE"*/) :
     juce::Slider(juce::Slider::SliderStyle::RotaryHorizontalVerticalDrag,
                  juce::Slider::TextEntryBoxPosition::NoTextBox),
     param(&rap),
     suffix(unitSuffix)
     {
+        setName(title);
         setLookAndFeel(&lnf);
     }
     
