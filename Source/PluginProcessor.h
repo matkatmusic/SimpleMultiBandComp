@@ -16,8 +16,8 @@ GUI RoadMap:
  4) Band Select Functionality DONE
  5) Band Select Buttons reflect the Solo/Mute/Bypass state DONE
  6) Custom Look and Feel for Sliders and Toggle Buttons. DONE
- 7) Spectrum Analyzer Overview
- 8) Data Structures for Spectrum Analyzer.
+ 7) Spectrum Analyzer Overview DONE
+ 8) Data Structures for Spectrum Analyzer. DONE
  9) Fifo usage in pluginProcessor::processBlock
  10) implementation of the analyzer rendering pre-computed paths.
  11) Drawing crossovers on top of the Analyzer Plot
