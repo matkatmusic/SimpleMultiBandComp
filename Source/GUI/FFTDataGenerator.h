@@ -53,11 +53,16 @@ struct FFTDataGenerator
             fftData[i] = v;
         }
         
+        float max = negativeInfinity;
         //convert them to decibels
         for( int i = 0; i < numBins; ++i )
         {
-            fftData[i] = juce::Decibels::gainToDecibels(fftData[i], negativeInfinity);
+            auto data = juce::Decibels::gainToDecibels(fftData[i], negativeInfinity);
+            fftData[i] = data;
+            max = juce::jmax(data, max);
         }
+        
+//        jassertfalse;
         
         fftDataFifo.push(fftData);
     }
