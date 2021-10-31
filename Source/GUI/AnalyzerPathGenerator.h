@@ -37,7 +37,8 @@ struct AnalyzerPathGenerator
         auto map = [bottom, top, negativeInfinity](float v)
         {
             return juce::jmap(v,
-                              negativeInfinity, 0.f,
+//                              negativeInfinity, 0.f,
+                              negativeInfinity, MAX_DECIBELS,
 //                              float(bottom+10),   top);
                               bottom, top);
         };
