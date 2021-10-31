@@ -171,6 +171,24 @@ void CompressorBandControls::buttonClicked(juce::Button *button)
     updateActiveBandFillColors(*button);
 }
 
+void CompressorBandControls::toggleAllBands(bool shouldBeBypassed)
+{
+    std::vector<Component*> bands { &lowBand, &midBand, &highBand};
+    for( auto* band : bands )
+    {
+        band->setColour(juce::TextButton::ColourIds::buttonOnColourId,
+                        shouldBeBypassed ?
+                            bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
+                            juce::Colours::grey);
+
+        band->setColour(juce::TextButton::ColourIds::buttonColourId,
+                        shouldBeBypassed ?
+                            bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
+                            juce::Colours::black);
+        band->repaint();
+    }
+}
+
 void CompressorBandControls::updateActiveBandFillColors(juce::Button &clickedButton)
 {
     jassert(activeBand != nullptr);
