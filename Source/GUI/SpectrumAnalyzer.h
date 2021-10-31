@@ -41,16 +41,20 @@ private:
 
     juce::Atomic<bool> parametersChanged { false };
     
-    void drawBackgroundGrid(juce::Graphics& g);
-    void drawTextLabels(juce::Graphics& g);
+//    void drawBackgroundGrid(juce::Graphics& g);
+    void drawBackgroundGrid(juce::Graphics& g,
+                            juce::Rectangle<int> bounds);
+    
+    void drawTextLabels(juce::Graphics& g,
+                        juce::Rectangle<int> bounds);
     
     std::vector<float> getFrequencies();
     std::vector<float> getGains();
     std::vector<float> getXs(const std::vector<float>& freqs, float left, float width);
 
-    juce::Rectangle<int> getRenderArea();
+    juce::Rectangle<int> getRenderArea(juce::Rectangle<int> bounds);
     
-    juce::Rectangle<int> getAnalysisArea();
+    juce::Rectangle<int> getAnalysisArea(juce::Rectangle<int> bounds);
     
     PathProducer leftPathProducer, rightPathProducer;
 };
