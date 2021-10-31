@@ -25,11 +25,10 @@ void ControlBar::resized()
     
     analyzerButton.setBounds(bounds.removeFromLeft(50)
                              .withTrimmedTop(4)
-                             .withTrimmedBottom(4));
+                             .withTrimmedLeft(4));
     
     globalBypassButton.setBounds(bounds.removeFromRight(60)
-                                 .withTrimmedTop(2)
-                                 .withTrimmedBottom(2));
+                                 .withTrimmedTop(2));
 }
 //==============================================================================
 SimpleMBCompAudioProcessorEditor::SimpleMBCompAudioProcessorEditor (SimpleMBCompAudioProcessor& p)
@@ -138,7 +137,7 @@ void SimpleMBCompAudioProcessorEditor::resized()
     
     bandControls.setBounds(bounds.removeFromBottom(137));
     
-    analyzer.setBounds(bounds.removeFromTop(225));
+    analyzer.setBounds(bounds.removeFromTop(216));
     
     globalControls.setBounds(bounds);
 }

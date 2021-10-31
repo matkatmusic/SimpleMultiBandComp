@@ -11,6 +11,7 @@
 #include "CompressorBandControls.h"
 #include "Utilities.h"
 #include "../DSP/Params.h"
+#include "LookAndFeel.h"
 
 //==============================================================================
 CompressorBandControls::CompressorBandControls(juce::AudioProcessorValueTreeState& apv) :
@@ -53,19 +54,19 @@ ratioSlider(nullptr, "")
     
     lowBand.setName("Low");
     lowBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
-                      juce::Colours::grey);
+                      ColorScheme::getSliderBorderColor());
     lowBand.setColour(juce::TextButton::ColourIds::buttonColourId,
                       juce::Colours::black);
     
     midBand.setName("Mid");
     midBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
-                      juce::Colours::grey);
+                      ColorScheme::getSliderBorderColor());
     midBand.setColour(juce::TextButton::ColourIds::buttonColourId,
                       juce::Colours::black);
     
     highBand.setName("High");
     highBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
-                      juce::Colours::grey);
+                       ColorScheme::getSliderBorderColor());
     highBand.setColour(juce::TextButton::ColourIds::buttonColourId,
                       juce::Colours::black);
     
@@ -177,14 +178,12 @@ void CompressorBandControls::toggleAllBands(bool shouldBeBypassed)
     for( auto* band : bands )
     {
         band->setColour(juce::TextButton::ColourIds::buttonOnColourId,
-                        shouldBeBypassed ?
-                            bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
-                            juce::Colours::grey);
+                        shouldBeBypassed ? bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
+                        ColorScheme::getSliderBorderColor());
 
         band->setColour(juce::TextButton::ColourIds::buttonColourId,
-                        shouldBeBypassed ?
-                            bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
-                            juce::Colours::black);
+                        shouldBeBypassed ? bypassButton.findColour(juce::TextButton::ColourIds::buttonOnColourId) :
+                        juce::Colours::black);
         band->repaint();
     }
 }
@@ -217,7 +216,7 @@ void CompressorBandControls::refreshBandButtonColors(juce::Button &band, juce::B
 void CompressorBandControls::resetActiveBandColors()
 {
     activeBand->setColour(juce::TextButton::ColourIds::buttonOnColourId,
-                          juce::Colours::grey);
+                          ColorScheme::getSliderBorderColor());
     activeBand->setColour(juce::TextButton::ColourIds::buttonColourId,
                           juce::Colours::black);
     activeBand->repaint();

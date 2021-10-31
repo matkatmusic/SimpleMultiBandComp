@@ -30,7 +30,8 @@ struct FFTDataGenerator
         std::copy(readIndex, readIndex + fftSize, fftData.begin());
         
         // first apply a windowing function to our data
-        window->multiplyWithWindowingTable (fftData.data(), fftSize);       // [1]
+        window->multiplyWithWindowingTable (fftData.data(),
+                                            static_cast<size_t>(fftSize));       // [1]
         
         // then render our FFT data..
         forwardFFT->performFrequencyOnlyForwardTransform (fftData.data());  // [2]
@@ -40,7 +41,7 @@ struct FFTDataGenerator
         //normalize the fft values.
         for( int i = 0; i < numBins; ++i )
         {
-            auto v = fftData[i];
+            auto v = fftData[static_cast<size_t>(i)];
 //            fftData[i] /= (float) numBins;
             if( !std::isinf(v) && !std::isnan(v) )
             {
@@ -50,15 +51,16 @@ struct FFTDataGenerator
             {
                 v = 0.f;
             }
-            fftData[i] = v;
+            fftData[static_cast<size_t>(i)] = v;
         }
         
         float max = negativeInfinity;
         //convert them to decibels
         for( int i = 0; i < numBins; ++i )
         {
-            auto data = juce::Decibels::gainToDecibels(fftData[i], negativeInfinity);
-            fftData[i] = data;
+            auto data = juce::Decibels::gainToDecibels(fftData[static_cast<size_t>(i)],
+                                                       negativeInfinity);
+            fftData[static_cast<size_t>(i)] = data;
             max = juce::jmax(data, max);
         }
         
@@ -80,7 +82,7 @@ struct FFTDataGenerator
         window = std::make_unique<juce::dsp::WindowingFunction<float>>(fftSize, juce::dsp::WindowingFunction<float>::blackmanHarris);
         
         fftData.clear();
-        fftData.resize(fftSize * 2, 0);
+        fftData.resize(static_cast<size_t>(fftSize * 2), 0);
 
         fftDataFifo.prepare(fftData.size());
     }
@@ -88,7 +90,7 @@ struct FFTDataGenerator
     int getFFTSize() const { return 1 << order; }
     int getNumAvailableFFTDataBlocks() const { return fftDataFifo.getNumAvailableForReading(); }
     //==============================================================================
-    bool getFFTData(BlockType& fftData) { return fftDataFifo.pull(fftData); }
+    bool getFFTData(BlockType& data) { return fftDataFifo.pull(data); }
 private:
     FFTOrder order;
     BlockType fftData;

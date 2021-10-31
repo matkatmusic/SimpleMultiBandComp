@@ -14,7 +14,9 @@
 Placeholder::Placeholder()
 {
     juce::Random r;
-    customColor = juce::Colour(r.nextInt(255), r.nextInt(255), r.nextInt(255));
+    customColor = juce::Colour(static_cast<juce::uint8>(r.nextInt(255)),
+                               static_cast<juce::uint8>(r.nextInt(255)),
+                               static_cast<juce::uint8>(r.nextInt(255)));
 }
 
 void Placeholder::paint(juce::Graphics& g)

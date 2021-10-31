@@ -47,7 +47,7 @@ struct Fifo
         auto write = fifo.write(1);
         if( write.blockSize1 > 0 )
         {
-            buffers[write.startIndex1] = t;
+            buffers[static_cast<size_t>(write.startIndex1)] = t;
             return true;
         }
         
@@ -59,7 +59,7 @@ struct Fifo
         auto read = fifo.read(1);
         if( read.blockSize1 > 0 )
         {
-            t = buffers[read.startIndex1];
+            t = buffers[static_cast<size_t>(read.startIndex1)];
             return true;
         }
         

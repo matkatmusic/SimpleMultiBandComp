@@ -112,19 +112,21 @@ private:
     juce::AudioParameterFloat* outputGainParam { nullptr };
     
     template<typename T, typename U>
-    void applyGain(T& buffer, U& gain)
+    void applyGain(T& buffer, U& dsp)
     {
         auto block = juce::dsp::AudioBlock<float>(buffer);
         auto ctx = juce::dsp::ProcessContextReplacing<float>(block);
-        gain.process(ctx);
+        dsp.process(ctx);
     }
     
     void updateState();
     
     void splitBands(const juce::AudioBuffer<float>& inputBuffer);
     
+#if USE_TEST_OSC
     juce::dsp::Oscillator<float> osc;
     juce::dsp::Gain<float> gain;
+#endif
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (SimpleMBCompAudioProcessor)
 };

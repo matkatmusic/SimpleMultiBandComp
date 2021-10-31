@@ -86,5 +86,24 @@ void addLabelPairs(Labels& labels, const ParamType& param, const SuffixType& suf
     labels.add({1.f, getValString(param, false, suffix)});
 }
 
+template<typename FloatType>
+FloatType mapY(FloatType value, FloatType bottom, FloatType top)
+{
+    auto y = juce::jmap(value,
+                        static_cast<FloatType>(NEGATIVE_INFINITY), static_cast<FloatType>(MAX_DECIBELS),
+                        bottom, top);
+    return y;
+}
+
+template<typename FloatType>
+FloatType mapX(FloatType freq, juce::Rectangle<FloatType> bounds)
+{
+    auto x = juce::mapFromLog10(freq,
+                                static_cast<FloatType>(MIN_FREQUENCY),
+                                static_cast<FloatType>(MAX_FREQUENCY));
+    x = x * bounds.getWidth() + bounds.getX();
+    return x;
+}
+
 juce::Rectangle<int> drawModuleBackground(juce::Graphics &g,
                                           juce::Rectangle<int> bounds);

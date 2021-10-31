@@ -55,7 +55,7 @@ struct AnalyzerPathGenerator
 
         for( int binNum = 1; binNum < numBins; binNum += pathResolution )
         {
-            y = map(renderData[binNum]);
+            y = map(renderData[static_cast<size_t>(binNum)]);
 
 //            jassert( !std::isnan(y) && !std::isinf(y) );
 
@@ -63,7 +63,7 @@ struct AnalyzerPathGenerator
             {
                 auto binFreq = binNum * binWidth;
                 auto normalizedBinX = juce::mapFromLog10(binFreq, MIN_FREQUENCY, MAX_FREQUENCY);
-                int binX = std::floor(normalizedBinX * width);
+                int binX = static_cast<int>(std::floor(normalizedBinX * width));
                 p.lineTo(binX, y);
             }
         }

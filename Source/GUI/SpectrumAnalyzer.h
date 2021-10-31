@@ -15,15 +15,10 @@
 #include "PathProducer.h"
 
 struct SpectrumAnalyzer: juce::Component,
-juce::AudioProcessorParameter::Listener,
 juce::Timer
 {
     SpectrumAnalyzer(SimpleMBCompAudioProcessor&);
-    ~SpectrumAnalyzer();
-    
-    void parameterValueChanged (int parameterIndex, float newValue) override;
-
-    void parameterGestureChanged (int parameterIndex, bool gestureIsStarting) override { }
+    ~SpectrumAnalyzer() override = default;
     
     void timerCallback() override;
     
@@ -40,10 +35,7 @@ private:
     SimpleMBCompAudioProcessor& audioProcessor;
 
     bool shouldShowFFTAnalysis = true;
-
-    juce::Atomic<bool> parametersChanged { false };
     
-//    void drawBackgroundGrid(juce::Graphics& g);
     void drawBackgroundGrid(juce::Graphics& g,
                             juce::Rectangle<int> bounds);
     

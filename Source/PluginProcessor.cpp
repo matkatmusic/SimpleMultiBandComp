@@ -143,16 +143,16 @@ int SimpleMBCompAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void SimpleMBCompAudioProcessor::setCurrentProgram (int index)
+void SimpleMBCompAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const juce::String SimpleMBCompAudioProcessor::getProgramName (int index)
+const juce::String SimpleMBCompAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void SimpleMBCompAudioProcessor::changeProgramName (int index, const juce::String& newName)
+void SimpleMBCompAudioProcessor::changeProgramName (int /*index*/, const juce::String& /*newName*/)
 {
 }
 
@@ -163,8 +163,8 @@ void SimpleMBCompAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     // initialisation that you need..
     
     juce::dsp::ProcessSpec spec;
-    spec.maximumBlockSize = samplesPerBlock;
-    spec.numChannels = getTotalNumOutputChannels();
+    spec.maximumBlockSize = static_cast<juce::uint32>(samplesPerBlock);
+    spec.numChannels = static_cast<juce::uint32>(getTotalNumOutputChannels());
     spec.sampleRate = sampleRate;
     
     for( auto& comp : compressors )
@@ -191,19 +191,21 @@ void SimpleMBCompAudioProcessor::prepareToPlay (double sampleRate, int samplesPe
     
     for( auto& buffer : filterBuffers )
     {
-        buffer.setSize(spec.numChannels, samplesPerBlock);
+        buffer.setSize(static_cast<int>(spec.numChannels), samplesPerBlock);
     }
     
     leftChannelFifo.prepare(samplesPerBlock);
     rightChannelFifo.prepare(samplesPerBlock);
     
+#if USE_TEST_OSC
     osc.initialise([](float x){ return std::sin(x); });
     osc.prepare(spec);
-//    osc.setFrequency(1000);
+    
     osc.setFrequency(getSampleRate() / ((2 << FFTOrder::order2048) - 1) * 50);
     
     gain.prepare(spec);
     gain.setGainDecibels(-12.f);
+#endif
 }
 
 void SimpleMBCompAudioProcessor::releaseResources()
@@ -281,7 +283,8 @@ void SimpleMBCompAudioProcessor::splitBands(const juce::AudioBuffer<float> &inpu
     HP2.process(fb2Ctx);
 }
 
-void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer, juce::MidiBuffer& midiMessages)
+void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
+                                               juce::MidiBuffer& /*midiMessages*/)
 {
     juce::ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -298,7 +301,7 @@ void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
 
     updateState();
     
-    if( false )
+#if USE_TEST_OSC
     {
         buffer.clear();
         auto block = juce::dsp::AudioBlock<float>(buffer);
@@ -308,6 +311,7 @@ void SimpleMBCompAudioProcessor::processBlock (juce::AudioBuffer<float>& buffer,
         gain.setGainDecibels(JUCE_LIVE_CONSTANT(-12));
         gain.process(ctx);
     }
+#endif
     
     leftChannelFifo.update(buffer);
     rightChannelFifo.update(buffer);
@@ -397,7 +401,8 @@ void SimpleMBCompAudioProcessor::setStateInformation (const void* data, int size
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.
-    auto tree = juce::ValueTree::readFromData(data, sizeInBytes);
+    auto tree = juce::ValueTree::readFromData(data,
+                                              static_cast<size_t>(sizeInBytes));
     if( tree.isValid() )
     {
         apvts.replaceState(tree);

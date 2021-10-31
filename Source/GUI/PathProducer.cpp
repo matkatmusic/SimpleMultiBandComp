@@ -49,7 +49,11 @@ void PathProducer::process(juce::Rectangle<float> fftBounds, double sampleRate)
         std::vector<float> fftData;
         if( leftChannelFFTDataGenerator.getFFTData( fftData) )
         {
-            pathProducer.generatePath(fftData, fftBounds, fftSize, binWidth, negativeInfinity);
+            pathProducer.generatePath(fftData,
+                                      fftBounds,
+                                      fftSize,
+                                      static_cast<float>(binWidth),
+                                      negativeInfinity);
         }
     }
     
