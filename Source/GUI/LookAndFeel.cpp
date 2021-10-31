@@ -23,18 +23,19 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g,
                                    juce::Slider & slider)
 {
     using namespace juce;
+    using namespace ColorScheme;
     
     auto bounds = Rectangle<float>(x, y, width, height);
     
     auto enabled = slider.isEnabled();
     
-//    g.setColour(enabled ? Colour(97u, 18u, 167u) : Colours::darkgrey );
-    g.setColour(enabled ? ColorScheme::getModuleBorderColor() : Colours::darkgrey);
+//    auto fillColour = Colour(97u, 18u, 167u);
+//    auto fillColour = JUCE_LIVE_CONSTANT(Colour(0xff1e0732));
+    g.setColour(enabled ? getSliderFillColor() : Colours::darkgrey );
     g.fillEllipse(bounds);
     
-//    g.setColour(enabled ? Colour(255u, 154u, 1u) : Colours::grey);
-    g.setColour(enabled ? ColorScheme::getSliderBorderColor() : Colours::grey);
-    g.drawEllipse(bounds, 1.f);
+    g.setColour(enabled ? getSliderBorderColor() : Colours::grey);
+    g.drawEllipse(bounds, 2.f);
     
     if( auto* rswl = dynamic_cast<RotarySliderWithLabels*>(&slider))
     {
@@ -45,7 +46,8 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g,
         r.setLeft(center.getX() - 2);
         r.setRight(center.getX() + 2);
         r.setTop(bounds.getY());
-        r.setBottom(center.getY() - rswl->getTextHeight() * 1.5);
+        r.setBottom( juce::jmax(center.getY() - rswl->getTextHeight() * 1.5f,
+                                bounds.getY() + 15));
         
         p.addRoundedRectangle(r, 2.f);
         
@@ -64,18 +66,18 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g,
         r.setSize(strWidth + 4, rswl->getTextHeight() + 2);
         r.setCentre(bounds.getCentre());
         
-        g.setColour(enabled ? Colours::black : Colours::darkgrey);
-        g.fillRect(r);
+//        g.setColour(enabled ? Colours::black : Colours::darkgrey);
+//        g.fillRect(r);
         
-        g.setColour(enabled ? Colours::white : Colours::lightgrey);
+        g.setColour(enabled ? ColorScheme::getTitleColor() : Colours::lightgrey);
         g.drawFittedText(text, r.toNearestInt(), juce::Justification::centred, 1);
     }
 }
 
 void LookAndFeel::drawToggleButton(juce::Graphics &g,
                                    juce::ToggleButton &toggleButton,
-                                   bool shouldDrawButtonAsHighlighted,
-                                   bool shouldDrawButtonAsDown)
+                                   bool /*shouldDrawButtonAsHighlighted*/,
+                                   bool /*shouldDrawButtonAsDown*/)
 {
     using namespace juce;
     
@@ -94,8 +96,8 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         
         powerButton.addCentredArc(r.getCentreX(),
                                   r.getCentreY(),
-                                  size * 0.5,
-                                  size * 0.5,
+                                  size * 0.5f,
+                                  size * 0.5f,
                                   0.f,
                                   degreesToRadians(ang),
                                   degreesToRadians(360.f - ang),
@@ -106,7 +108,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         
         PathStrokeType pst(2.f, PathStrokeType::JointStyle::curved);
         
-        auto color = toggleButton.getToggleState() ? Colours::dimgrey : Colour(0u, 172u, 1u);
+        auto color = toggleButton.getToggleState() ? Colours::dimgrey : ColorScheme::getSliderRangeTextColor();
         
         g.setColour(color);
         g.strokePath(powerButton, pst);
@@ -130,15 +132,15 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         auto buttonIsOn = toggleButton.getToggleState();
         
         const int cornerSize = 4;
-        
+
         g.setColour(buttonIsOn ?
                     toggleButton.findColour(TextButton::ColourIds::buttonOnColourId) :
                     toggleButton.findColour(TextButton::ColourIds::buttonColourId));
-        
         g.fillRoundedRectangle(bounds.toFloat(), cornerSize);
         
-        g.setColour(buttonIsOn ? juce::Colours::black : juce::Colours::white );
+        g.setColour(buttonIsOn ? Colours::white : ColorScheme::getTitleColor());
         g.drawRoundedRectangle(bounds.toFloat(), cornerSize, 1);
-        g.drawFittedText(toggleButton.getName(), bounds, juce::Justification::centred, 1);
+        g.setColour(buttonIsOn ? Colours::black : ColorScheme::getTitleColor());
+        g.drawFittedText(toggleButton.getName(), bounds, Justification::centred, 1);
     }
 }
