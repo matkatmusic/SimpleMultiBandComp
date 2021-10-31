@@ -20,7 +20,7 @@ GUI RoadMap:
  8) Data Structures for Spectrum Analyzer. DONE
  9) Fifo usage in pluginProcessor::processBlock DONE
  10) implementation of the analyzer rendering pre-computed paths. DONE
- 11) Drawing crossovers on top of the Analyzer Plot
+ 11) Drawing crossovers on top of the Analyzer Plot DONE
  12) Drawing gain reduction on top of the analyzer
  13) Analyzer Bypass.
  14) Global Bypass button
@@ -86,12 +86,12 @@ public:
     using BlockType = juce::AudioBuffer<float>;
     SingleChannelSampleFifo<BlockType> leftChannelFifo { Channel::Left };
     SingleChannelSampleFifo<BlockType> rightChannelFifo { Channel::Right };
-private:
+
     std::array<CompressorBand, 3> compressors;
     CompressorBand& lowBandComp = compressors[0];
     CompressorBand& midBandComp = compressors[1];
     CompressorBand& highBandComp = compressors[2];
-    
+private:
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
     //      fc0     fc1
