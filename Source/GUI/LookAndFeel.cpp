@@ -25,7 +25,7 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g,
     using namespace juce;
     using namespace ColorScheme;
     
-    auto bounds = Rectangle<float>(x, y, width, height);
+    auto bounds = Rectangle<int>(x, y, width, height).toFloat();
     
     auto enabled = slider.isEnabled();
     
@@ -59,11 +59,12 @@ void LookAndFeel::drawRotarySlider(juce::Graphics & g,
         
         g.fillPath(p);
         
-        g.setFont(rswl->getTextHeight());
+        g.setFont(static_cast<float>(rswl->getTextHeight()));
         auto text = rswl->getDisplayString();
         auto strWidth = g.getCurrentFont().getStringWidth(text);
         
-        r.setSize(strWidth + 4, rswl->getTextHeight() + 2);
+        r.setSize(static_cast<float>(strWidth + 4), 
+                  static_cast<float>(rswl->getTextHeight() + 2));
         r.setCentre(bounds.getCentre());
         
 //        g.setColour(enabled ? Colours::black : Colours::darkgrey);
