@@ -14,10 +14,18 @@
 
 #include "PathProducer.h"
 
+struct SpectrumAnalyzerUtils
+{
+    static juce::Rectangle<int> getRenderArea(juce::Rectangle<int> bounds);
+    
+    static juce::Rectangle<int> getAnalysisArea(juce::Rectangle<int> bounds);
+};
+
 struct SpectrumAnalyzer: juce::Component,
 juce::Timer
 {
-    SpectrumAnalyzer(SimpleMBCompAudioProcessor&);
+    using SCSF = SingleChannelSampleFifo<juce::AudioBuffer<float>>;
+    SpectrumAnalyzer(juce::AudioProcessor& processor, SCSF& left, SCSF& right);
     ~SpectrumAnalyzer() override = default;
     
     void timerCallback() override;
@@ -30,10 +38,8 @@ juce::Timer
         shouldShowFFTAnalysis = enabled;
     }
     
-    void update(const std::vector<float>& values);
 private:
-    SimpleMBCompAudioProcessor& audioProcessor;
-
+    double sampleRate;
     bool shouldShowFFTAnalysis = true;
     
     void drawBackgroundGrid(juce::Graphics& g,
@@ -46,17 +52,29 @@ private:
     std::vector<float> getGains();
     std::vector<float> getXs(const std::vector<float>& freqs, float left, float width);
 
-    juce::Rectangle<int> getRenderArea(juce::Rectangle<int> bounds);
-    
-    juce::Rectangle<int> getAnalysisArea(juce::Rectangle<int> bounds);
-    
-    PathProducer leftPathProducer, rightPathProducer;
+    PathProducer<juce::AudioBuffer<float>> leftPathProducer, rightPathProducer;
     
     void drawFFTAnalysis(juce::Graphics& g,
                          juce::Rectangle<int> bounds);
-    
+};
+
+struct MBCompAnalyzerOverlay : juce::Component, juce::Timer
+{
+    MBCompAnalyzerOverlay(juce::AudioParameterFloat& lowXover,
+                          juce::AudioParameterFloat& midXover,
+                          juce::AudioParameterFloat& lowThresh,
+                          juce::AudioParameterFloat& midThresh,
+                          juce::AudioParameterFloat& highThresh);
+                            
     void drawCrossovers(juce::Graphics& g,
                         juce::Rectangle<int> bounds);
+    
+    
+    void update(const std::vector<float>& values);
+    
+    void paint(juce::Graphics& g) override;
+    
+    void timerCallback() override;
     
     juce::AudioParameterFloat* lowMidXoverParam { nullptr };
     juce::AudioParameterFloat* midHighXoverParam { nullptr };

@@ -105,5 +105,7 @@ FloatType mapX(FloatType freq, juce::Rectangle<FloatType> bounds)
     return x;
 }
 
-juce::Rectangle<int> drawModuleBackground(juce::Graphics &g,
+juce::Rectangle<int> getModuleBackgroundArea(juce::Rectangle<int> bounds);
+
+void drawModuleBackground(juce::Graphics &g,
                                           juce::Rectangle<int> bounds);

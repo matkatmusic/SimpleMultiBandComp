@@ -52,6 +52,13 @@ SimpleMBCompAudioProcessorEditor::SimpleMBCompAudioProcessorEditor (SimpleMBComp
     addAndMakeVisible(controlBar);
     addAndMakeVisible(analyzer);
     
+    overlay = std::make_unique<MBCompAnalyzerOverlay>(*audioProcessor.lowMidCrossover,
+                                                      *audioProcessor.midHighCrossover,
+                                                      *audioProcessor.lowThresholdParam,
+                                                      *audioProcessor.midThresholdParam,
+                                                      *audioProcessor.highThresholdParam);
+    addAndMakeVisible(*overlay);
+    
     addAndMakeVisible(globalControls);
     addAndMakeVisible(bandControls);
     
@@ -138,6 +145,7 @@ void SimpleMBCompAudioProcessorEditor::resized()
     bandControls.setBounds(bounds.removeFromBottom(137));
     
     analyzer.setBounds(bounds.removeFromTop(216));
+    overlay->setBounds(analyzer.getBounds());
     
     globalControls.setBounds(bounds);
 }
@@ -154,7 +162,7 @@ void SimpleMBCompAudioProcessorEditor::timerCallback()
         audioProcessor.highBandComp.getRMSOutputLevelDb()
     };
     
-    analyzer.update(values);
+    overlay->update(values);
     
     updateGlobalBypassButton();
 }

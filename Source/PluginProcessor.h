@@ -91,6 +91,13 @@ public:
     CompressorBand& lowBandComp = compressors[0];
     CompressorBand& midBandComp = compressors[1];
     CompressorBand& highBandComp = compressors[2];
+    
+    juce::AudioParameterFloat* lowMidCrossover { nullptr };
+    juce::AudioParameterFloat* midHighCrossover { nullptr };
+    
+    juce::AudioParameterFloat* lowThresholdParam { nullptr };
+    juce::AudioParameterFloat* midThresholdParam { nullptr };
+    juce::AudioParameterFloat* highThresholdParam { nullptr };
 private:
     
     using Filter = juce::dsp::LinkwitzRileyFilter<float>;
@@ -102,8 +109,7 @@ private:
 //    Filter invAP1, invAP2;
 //    juce::AudioBuffer<float> invAPBuffer;
     
-    juce::AudioParameterFloat* lowMidCrossover { nullptr };
-    juce::AudioParameterFloat* midHighCrossover { nullptr };
+    
     
     std::array<juce::AudioBuffer<float>, 3> filterBuffers;
     

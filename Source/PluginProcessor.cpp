@@ -44,6 +44,10 @@ SimpleMBCompAudioProcessor::SimpleMBCompAudioProcessor()
     floatHelper(highBandComp.release,   Names::Release_High_Band);
     floatHelper(highBandComp.threshold, Names::Threshold_High_Band);
     
+    lowThresholdParam = lowBandComp.threshold;
+    midThresholdParam = midBandComp.threshold;
+    highThresholdParam = highBandComp.threshold;
+    
     auto choiceHelper = [&apvts = this->apvts, &params](auto& param, const auto& paramName)
     {
         param = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(params.at(paramName)));
