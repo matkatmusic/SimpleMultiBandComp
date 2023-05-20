@@ -32,7 +32,14 @@ juce::String getValString(const juce::RangedAudioParameter& param,
     return str;
 }
 
-juce::Rectangle<int> drawModuleBackground(juce::Graphics &g,
+juce::Rectangle<int> getModuleBackgroundArea(juce::Rectangle<int> bounds)
+{
+    bounds.reduce(3, 3);
+    
+    return bounds;
+}
+
+void drawModuleBackground(juce::Graphics &g,
                           juce::Rectangle<int> bounds)
 {
     using namespace juce;
@@ -46,6 +53,4 @@ juce::Rectangle<int> drawModuleBackground(juce::Graphics &g,
     g.fillRoundedRectangle(bounds.toFloat(), 3);
     
     g.drawRect(localBounds);
-    
-    return bounds;
 }

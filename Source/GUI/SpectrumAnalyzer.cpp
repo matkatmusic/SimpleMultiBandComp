@@ -14,53 +14,31 @@
 #include "LookAndFeel.h"
 
 //==============================================================================
-SpectrumAnalyzer::SpectrumAnalyzer(SimpleMBCompAudioProcessor& p) :
-audioProcessor(p),
-leftPathProducer(audioProcessor.leftChannelFifo),
-rightPathProducer(audioProcessor.rightChannelFifo)
+SpectrumAnalyzer::SpectrumAnalyzer(juce::AudioProcessor& processor, SCSF& leftChannelFifo, SCSF& rightChannelFifo) :
+sampleRate(processor.getSampleRate()),
+leftPathProducer(leftChannelFifo),
+rightPathProducer(rightChannelFifo)
 {
-    using namespace Params;
-    const auto& paramNames = GetParams();
-    
-    auto floatHelper = [&apvts = audioProcessor.apvts, &paramNames](auto& param, const auto& paramName)
-    {
-        param = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(paramNames.at(paramName)));
-        jassert(param != nullptr);
-    };
-    
-    floatHelper(lowMidXoverParam, Names::Low_Mid_Crossover_Freq);
-    floatHelper(midHighXoverParam, Names::Mid_High_Crossover_Freq);
-    
-    floatHelper(lowThresholdParam, Names::Threshold_Low_Band);
-    floatHelper(midThresholdParam, Names::Threshold_Mid_Band);
-    floatHelper(highThresholdParam, Names::Threshold_High_Band);
-    
     startTimerHz(60);
 }
 
 void SpectrumAnalyzer::drawFFTAnalysis(juce::Graphics &g, juce::Rectangle<int> bounds)
 {
     using namespace juce;
-    auto responseArea = getAnalysisArea(bounds);
+    auto responseArea = SpectrumAnalyzerUtils::getAnalysisArea(bounds);
     
     Graphics::ScopedSaveState sss(g);
     g.reduceClipRegion(responseArea);
     
     auto leftChannelFFTPath = leftPathProducer.getPath();
-    leftChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), 0
-                                                                    //responseArea.getY()
-                                                                    ));
+    leftChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), 0));
     
-//    g.setColour(Colour(97u, 18u, 167u)); //purple-
     g.setColour(ColorScheme::getInputSignalColor());
     g.strokePath(leftChannelFFTPath, PathStrokeType(1.f));
     
     auto rightChannelFFTPath = rightPathProducer.getPath();
-    rightChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), 0
-                                                                     //responseArea.getY()
-                                                                     ));
+    rightChannelFFTPath.applyTransform(AffineTransform().translation(responseArea.getX(), 0));
     
-//    g.setColour(Colour(215u, 201u, 134u));
     g.setColour(ColorScheme::getOutputSignalColor());
     g.strokePath(rightChannelFFTPath, PathStrokeType(1.f));
 }
@@ -70,114 +48,19 @@ void SpectrumAnalyzer::paint (juce::Graphics& g)
     using namespace juce;
     // (Our component is opaque, so we must completely fill the background with a solid colour)
     g.fillAll (Colours::black);
+    auto localBounds = getLocalBounds();
     
-    auto bounds = drawModuleBackground(g, getLocalBounds());
+    auto bounds = getModuleBackgroundArea(localBounds);
+    drawModuleBackground(g, localBounds);
 
     drawBackgroundGrid(g, bounds);
-    
-    
     
     if( shouldShowFFTAnalysis )
     {
         drawFFTAnalysis(g, bounds);
     }
     
-//    Path border;
-//
-//    border.setUsingNonZeroWinding(false);
-//
-//    border.addRoundedRectangle(getRenderArea(bounds), 4);
-//    border.addRectangle(getLocalBounds());
-//
-//    g.setColour(Colours::black);
-    
-//    g.fillPath(border);
-    
-    drawCrossovers(g, bounds);
-    
     drawTextLabels(g, bounds);
-    
-//    g.setColour(Colours::orange);
-//    g.drawRoundedRectangle(getRenderArea(bounds).toFloat(), 4.f, 1.f);
-}
-
-void SpectrumAnalyzer::drawCrossovers(juce::Graphics &g, juce::Rectangle<int> bounds)
-{
-    using namespace juce;
-    bounds = getAnalysisArea(bounds);
-    
-    const float top { static_cast<float>(bounds.getY()) };
-    const float bottom { static_cast<float>(bounds.getBottom()) };
-    
-    g.setColour(ColorScheme::getGainReductionColor().withAlpha(0.5f));
-    auto lowMidX = mapX(lowMidXoverParam->get(), bounds.toFloat());
-     
-    auto zeroDb = mapY(0.f, bottom, top);
-    
-    g.fillRect(Rectangle<float>::leftTopRightBottom(bounds.getX(),
-                                                    zeroDb,
-                                                    lowMidX,
-                                                    mapY(lowBandGR, bottom, top)));
-    
-    auto midHighX = mapX(midHighXoverParam->get(), bounds.toFloat());
-    g.fillRect(Rectangle<float>::leftTopRightBottom(lowMidX,
-                                                    zeroDb,
-                                                    midHighX,
-                                                    mapY(midBandGR, bottom, top)));
-    
-    g.fillRect(Rectangle<float>::leftTopRightBottom(midHighX,
-                                                    zeroDb,
-                                                    bounds.getRight(),
-                                                    mapY(highBandGR, bottom, top)));
-    
-    g.setColour(Colours::lightblue);
-    g.drawVerticalLine(static_cast<int>(lowMidX), top, bottom);
-    g.drawVerticalLine(static_cast<int>(midHighX), top, bottom);
-    
-    g.setColour(ColorScheme::getThresholdColor());
-    /*
-     draw crossovers after GR rectangles
-     */
-    g.setColour(Colours::lightblue);
-    g.drawVerticalLine(static_cast<int>(lowMidX), top, bottom);
-    g.drawVerticalLine(static_cast<int>(midHighX), top, bottom);
-    
-    g.setColour(ColorScheme::getThresholdColor());
-    auto drawThreshold = [&g](auto left, auto right, auto top_, auto bottom_)
-    {
-        g.fillRect(Rectangle<float>::leftTopRightBottom(left, top_, right, bottom_));
-    };
-    
-    auto lowTh = mapY(lowThresholdParam->get(), bottom, top);
-    auto midTh = mapY(midThresholdParam->get(), bottom, top);
-    auto highTh = mapY(highThresholdParam->get(), bottom, top);
-    
-    auto offset = 1; //JUCE_LIVE_CONSTANT(2);
-    
-    drawThreshold(bounds.getX(), lowMidX, lowTh - offset, lowTh + offset);
-    drawThreshold(lowMidX, midHighX, midTh - offset, midTh + offset);
-    drawThreshold(midHighX, bounds.getRight(), highTh - offset, highTh + offset);
-}
-
-void SpectrumAnalyzer::update(const std::vector<float> &values)
-{
-    jassert(values.size() == 6);
-    
-    enum
-    {
-        LowBandIn,
-        LowBandOut,
-        MidBandIn,
-        MidBandOut,
-        HighBandIn,
-        HighBandOut
-    };
-    
-    lowBandGR = values[LowBandOut] - values[LowBandIn];
-    midBandGR = values[MidBandOut] - values[MidBandIn];
-    highBandGR = values[HighBandOut] - values[HighBandIn];
-    
-    repaint();
 }
 
 std::vector<float> SpectrumAnalyzer::getFrequencies()
@@ -193,10 +76,6 @@ std::vector<float> SpectrumAnalyzer::getFrequencies()
 
 std::vector<float> SpectrumAnalyzer::getGains()
 {
-//    return std::vector<float>
-//    {
-//        -24, -12, 0, 12, 24
-//    };
     std::vector<float> values;
     
     auto increment = MAX_DECIBELS; //12 db steps
@@ -226,7 +105,7 @@ void SpectrumAnalyzer::drawBackgroundGrid(juce::Graphics &g,
     using namespace juce;
     auto freqs = getFrequencies();
     
-    auto renderArea = getAnalysisArea(bounds);
+    auto renderArea = SpectrumAnalyzerUtils::getAnalysisArea(bounds);
     auto left = renderArea.getX();
     auto right = renderArea.getRight();
     auto top = renderArea.getY();
@@ -260,7 +139,7 @@ void SpectrumAnalyzer::drawTextLabels(juce::Graphics &g, juce::Rectangle<int> bo
     const int fontHeight = 10;
     g.setFont(fontHeight);
     
-    auto renderArea = getAnalysisArea(bounds);
+    auto renderArea = SpectrumAnalyzerUtils::getAnalysisArea(bounds);
     auto left = renderArea.getX() + 1;
     
     auto top = renderArea.getY();
@@ -332,10 +211,9 @@ void SpectrumAnalyzer::resized()
 {
     using namespace juce;
     auto bounds = getLocalBounds();
-    auto fftBounds = getAnalysisArea(bounds).toFloat();
+    auto fftBounds = SpectrumAnalyzerUtils::getAnalysisArea(bounds).toFloat();
     auto negInf = jmap(bounds.toFloat().getBottom(),
                        fftBounds.getBottom(), fftBounds.getY(),
-//                       -48.f, 0.f);
                        NEGATIVE_INFINITY, MAX_DECIBELS);
     DBG( "Negative infinity: " << negInf );
     leftPathProducer.updateNegativeInfinity(negInf);
@@ -347,9 +225,8 @@ void SpectrumAnalyzer::timerCallback()
     if( shouldShowFFTAnalysis )
     {
         auto bounds = getLocalBounds();
-        auto fftBounds = getAnalysisArea(bounds).toFloat();
+        auto fftBounds = SpectrumAnalyzerUtils::getAnalysisArea(bounds).toFloat();
         fftBounds.setBottom(bounds.getBottom());
-        auto sampleRate = audioProcessor.getSampleRate();
         
         leftPathProducer.process(fftBounds, sampleRate);
         rightPathProducer.process(fftBounds, sampleRate);
@@ -358,10 +235,8 @@ void SpectrumAnalyzer::timerCallback()
     repaint();
 }
 
-juce::Rectangle<int> SpectrumAnalyzer::getRenderArea(juce::Rectangle<int> bounds)
+juce::Rectangle<int> SpectrumAnalyzerUtils::getRenderArea(juce::Rectangle<int> bounds)
 {
-//    auto bounds = getLocalBounds();
-    
     bounds.removeFromTop(12);
     bounds.removeFromBottom(2);
     bounds.removeFromLeft(20);
@@ -370,10 +245,117 @@ juce::Rectangle<int> SpectrumAnalyzer::getRenderArea(juce::Rectangle<int> bounds
     return bounds;
 }
 
-juce::Rectangle<int> SpectrumAnalyzer::getAnalysisArea(juce::Rectangle<int> bounds)
+juce::Rectangle<int> SpectrumAnalyzerUtils::getAnalysisArea(juce::Rectangle<int> bounds)
 {
     bounds = getRenderArea(bounds);
     bounds.removeFromTop(4);
     bounds.removeFromBottom(4);
     return bounds;
+}
+//==============================================================================
+MBCompAnalyzerOverlay::MBCompAnalyzerOverlay(juce::AudioParameterFloat& lowXover,
+                      juce::AudioParameterFloat& midXover,
+                      juce::AudioParameterFloat& lowThresh,
+                      juce::AudioParameterFloat& midThresh,
+                      juce::AudioParameterFloat& highThresh) :
+lowMidXoverParam(&lowXover),
+midHighXoverParam(&midXover),
+lowThresholdParam (&lowThresh),
+midThresholdParam (&midThresh),
+highThresholdParam(&highThresh)
+{
+    
+}
+
+void MBCompAnalyzerOverlay::drawCrossovers(juce::Graphics &g, juce::Rectangle<int> bounds)
+{
+    using namespace juce;
+    bounds = SpectrumAnalyzerUtils::getAnalysisArea(bounds);
+    
+    const float top { static_cast<float>(bounds.getY()) };
+    const float bottom { static_cast<float>(bounds.getBottom()) };
+    
+    g.setColour(ColorScheme::getGainReductionColor().withAlpha(0.5f));
+    auto lowMidX = mapX(lowMidXoverParam->get(), bounds.toFloat());
+     
+    auto zeroDb = mapY(0.f, bottom, top);
+    
+    g.fillRect(Rectangle<float>::leftTopRightBottom(bounds.getX(),
+                                                    zeroDb,
+                                                    lowMidX,
+                                                    mapY(lowBandGR, bottom, top)));
+    
+    auto midHighX = mapX(midHighXoverParam->get(), bounds.toFloat());
+    g.fillRect(Rectangle<float>::leftTopRightBottom(lowMidX,
+                                                    zeroDb,
+                                                    midHighX,
+                                                    mapY(midBandGR, bottom, top)));
+    
+    g.fillRect(Rectangle<float>::leftTopRightBottom(midHighX,
+                                                    zeroDb,
+                                                    bounds.getRight(),
+                                                    mapY(highBandGR, bottom, top)));
+    
+    g.setColour(Colours::lightblue);
+    g.drawVerticalLine(static_cast<int>(lowMidX), top, bottom);
+    g.drawVerticalLine(static_cast<int>(midHighX), top, bottom);
+    
+    g.setColour(ColorScheme::getThresholdColor());
+    /*
+     draw crossovers after GR rectangles
+     */
+    g.setColour(Colours::lightblue);
+    g.drawVerticalLine(static_cast<int>(lowMidX), top, bottom);
+    g.drawVerticalLine(static_cast<int>(midHighX), top, bottom);
+    
+    g.setColour(ColorScheme::getThresholdColor());
+    auto drawThreshold = [&g](auto left, auto right, auto top_, auto bottom_)
+    {
+        g.fillRect(Rectangle<float>::leftTopRightBottom(left, top_, right, bottom_));
+    };
+    
+    auto lowTh = mapY(lowThresholdParam->get(), bottom, top);
+    auto midTh = mapY(midThresholdParam->get(), bottom, top);
+    auto highTh = mapY(highThresholdParam->get(), bottom, top);
+    
+    auto offset = 1; //JUCE_LIVE_CONSTANT(2);
+    
+    drawThreshold(bounds.getX(), lowMidX, lowTh - offset, lowTh + offset);
+    drawThreshold(lowMidX, midHighX, midTh - offset, midTh + offset);
+    drawThreshold(midHighX, bounds.getRight(), highTh - offset, highTh + offset);
+}
+
+void MBCompAnalyzerOverlay::update(const std::vector<float> &values)
+{
+    jassert(values.size() == 6);
+    
+    enum
+    {
+        LowBandIn,
+        LowBandOut,
+        MidBandIn,
+        MidBandOut,
+        HighBandIn,
+        HighBandOut
+    };
+    
+    lowBandGR = values[LowBandOut] - values[LowBandIn];
+    midBandGR = values[MidBandOut] - values[MidBandIn];
+    highBandGR = values[HighBandOut] - values[HighBandIn];
+    
+    repaint();
+}
+
+void MBCompAnalyzerOverlay::paint(juce::Graphics &g)
+{
+    auto localBounds = getLocalBounds();
+    
+    auto bounds = getModuleBackgroundArea(localBounds);
+    
+    drawCrossovers(g, bounds);
+}
+
+void MBCompAnalyzerOverlay::timerCallback()
+{
+    repaint();
 }
