@@ -13,7 +13,7 @@
 #include <JuceHeader.h>
 
 #include <array>
-template<typename T>
+template<typename T, size_t Size = 30>
 struct Fifo
 {
     void prepare(int numChannels, int numSamples)
@@ -71,7 +71,6 @@ struct Fifo
         return fifo.getNumReady();
     }
 private:
-    static constexpr int Capacity = 30;
-    std::array<T, Capacity> buffers;
-    juce::AbstractFifo fifo {Capacity};
+    std::array<T, Size> buffers;
+    juce::AbstractFifo fifo {Size};
 };
