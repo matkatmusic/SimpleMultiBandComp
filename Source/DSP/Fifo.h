@@ -13,6 +13,19 @@
 #include <JuceHeader.h>
 
 #include <array>
+
+template<typename T>
+struct IsReferenceCountedObjectPtr : std::false_type { };
+
+template<typename T>
+struct IsReferenceCountedObjectPtr<juce::ReferenceCountedObjectPtr<T>> : std::true_type { };
+
+template<typename T>
+struct IsReferenceCountedArray : std::false_type { };
+
+template<typename T>
+struct IsReferenceCountedArray<juce::ReferenceCountedArray<T>> : std::true_type { };
+
 template<typename T, size_t Size = 30>
 struct Fifo
 {
@@ -60,6 +73,58 @@ struct Fifo
         if( read.blockSize1 > 0 )
         {
             t = buffers[static_cast<size_t>(read.startIndex1)];
+            return true;
+        }
+        
+        return false;
+    }
+    
+    bool exchange(T&& t)
+    {
+        auto read = fifo.read(1);
+        if( read.blockSize1 > 0 )
+        {
+            auto idx = static_cast<size_t>(read.startIndex1);
+            if constexpr( IsReferenceCountedObjectPtr<T>::value)
+            {
+                jassert(t.get() == nullptr);
+                
+                std::swap(t, buffers[idx]);
+                jassert(buffers[idx].get() == nullptr );
+            }
+            else if constexpr( IsReferenceCountedArray<T>::value)
+            {
+                std::swap(buffers[idx], t);
+                jassert( buffers[idx].size() == 0 );
+            }
+            else if constexpr (std::is_same_v<T, std::vector<float>>)
+            {
+                if( t.size() < buffers[idx].size() )
+                {
+                    t = buffers[idx]; //can't swap.  must copy.
+                }
+                else
+                {
+                    std::swap( t, buffers[idx] ); //ok to swap.
+                }
+            }
+            else if constexpr( std::is_same_v<T, juce::AudioBuffer<float>> )
+            {
+                if( t.getNumSamples() < buffers[idx].getNumSamples() )
+                {
+                    t = buffers[idx]; //can't swap.  must copy
+                }
+                else
+                {
+                    std::swap( t, buffers[idx]); //ok to swap.
+                }
+            }
+            else //T is something else.  blindly swap.  this leaves buffer[x] in a potentially invalid state that could allocate the next time it's used.
+            {
+                std::swap( t, buffers[idx]);
+//                jassertfalse;
+            }
+                    
             return true;
         }
         
