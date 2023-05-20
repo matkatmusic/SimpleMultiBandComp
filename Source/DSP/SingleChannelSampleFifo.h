@@ -16,8 +16,8 @@
 
 enum Channel
 {
-    Right, //effectively 0
-    Left //effectively 1
+    Left, //effectively 0
+    Right, //effectively 1
 };
 
 template<typename BlockType>
