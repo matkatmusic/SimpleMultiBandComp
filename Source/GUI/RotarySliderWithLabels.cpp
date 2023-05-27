@@ -65,6 +65,8 @@ void RotarySliderWithLabels::paint(juce::Graphics &g)
         r.setSize(g.getCurrentFont().getStringWidth(str), getTextHeight());
         r.setCentre(c);
         r.setY(r.getY() + getTextHeight());
+        r.setLeft(juce::jmax<int>(r.getX(), 0));
+        r.setRight(juce::jmin<int>(r.getRight(), bounds.getRight()));
         
         g.drawFittedText(str, r.toNearestInt(), juce::Justification::centred, 1);
     }
