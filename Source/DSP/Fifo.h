@@ -12,8 +12,6 @@
 
 #include <JuceHeader.h>
 
-#include <array>
-
 template<typename T>
 struct IsReferenceCountedObjectPtr : std::false_type { };
 
