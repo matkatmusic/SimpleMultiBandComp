@@ -78,7 +78,7 @@ std::vector<float> SpectrumAnalyzer::getGains()
 {
     std::vector<float> values;
     
-    auto increment = MAX_DECIBELS; //12 db steps
+    auto increment = juce::jmin(12.f, MAX_DECIBELS); //12 db steps
     for( auto db = NEGATIVE_INFINITY; db <= MAX_DECIBELS; db += increment)
     {
         values.push_back(db);

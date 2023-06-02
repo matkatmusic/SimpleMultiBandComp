@@ -16,7 +16,7 @@
 #define MAX_FREQUENCY 20000.f
 
 #define NEGATIVE_INFINITY -72.f
-#define MAX_DECIBELS 12.f
+#define MAX_DECIBELS 24.f
 
 #define MIN_THRESHOLD -60.f
 
