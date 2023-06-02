@@ -141,7 +141,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
         
         g.setColour(buttonIsOn ? Colours::white : ColorScheme::getTitleColor());
         g.drawRoundedRectangle(bounds.toFloat(), cornerSize, 1);
-        g.setColour(buttonIsOn ? Colours::black : ColorScheme::getTitleColor());
-        g.drawFittedText(toggleButton.getName(), bounds, Justification::centred, 1);
+        g.setColour(buttonIsOn ? Colours::white : ColorScheme::getTitleColor());
+        g.drawFittedText(toggleButton.getButtonText(), bounds, Justification::centred, 1);
     }
 }
