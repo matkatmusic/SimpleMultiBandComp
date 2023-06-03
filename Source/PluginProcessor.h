@@ -84,8 +84,8 @@ public:
     APVTS apvts {*this, nullptr, "Parameters", createParameterLayout() };
     
     using BlockType = juce::AudioBuffer<float>;
-    SingleChannelSampleFifo<BlockType> leftChannelFifo { Channel::Left };
-    SingleChannelSampleFifo<BlockType> rightChannelFifo { Channel::Right };
+    SimpleMBComp::SingleChannelSampleFifo<BlockType> leftChannelFifo { SimpleMBComp::Channel::Left };
+    SimpleMBComp::SingleChannelSampleFifo<BlockType> rightChannelFifo { SimpleMBComp::Channel::Right };
 
     std::array<CompressorBand, 3> compressors;
     CompressorBand& lowBandComp = compressors[0];

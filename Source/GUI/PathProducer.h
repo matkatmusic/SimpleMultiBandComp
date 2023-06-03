@@ -16,6 +16,8 @@
 #include "AnalyzerPathGenerator.h"
 #include "../PluginProcessor.h"
 
+namespace SimpleMBComp
+{
 template<typename BlockType>
 struct PathProducer
 {
@@ -94,3 +96,5 @@ private:
     
     float negativeInfinity { -48.f };
 };
+
+} //end namespace SimpleMBComp

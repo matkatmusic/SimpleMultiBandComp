@@ -12,6 +12,8 @@
 
 #include <JuceHeader.h>
 
+namespace SimpleMBComp
+{
 template<typename T>
 struct IsReferenceCountedObjectPtr : std::false_type { };
 
@@ -137,3 +139,5 @@ private:
     std::array<T, Size> buffers;
     juce::AbstractFifo fifo {Size};
 };
+
+} //end namespace SimpleMBComp

@@ -12,6 +12,8 @@
 
 #include <JuceHeader.h>
 
+namespace SimpleMBComp
+{
 template<typename PathType>
 struct AnalyzerPathGenerator
 {
@@ -38,7 +40,7 @@ struct AnalyzerPathGenerator
         {
             return juce::jmap(v,
 //                              negativeInfinity, 0.f,
-                              negativeInfinity, MAX_DECIBELS,
+                              negativeInfinity, SimpleMBComp::MAX_DB,
 //                              float(bottom+10),   top);
                               bottom, top);
         };
@@ -83,3 +85,5 @@ struct AnalyzerPathGenerator
 private:
     Fifo<PathType> pathFifo;
 };
+
+}// end namespace SimpleMBComp

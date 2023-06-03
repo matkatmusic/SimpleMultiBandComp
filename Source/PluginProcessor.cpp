@@ -431,7 +431,7 @@ juce::AudioProcessorValueTreeState::ParameterLayout SimpleMBCompAudioProcessor::
                                                      gainRange,
                                                      0));
     
-    auto thresholdRange = NormalisableRange<float>(MIN_THRESHOLD, MAX_DECIBELS, 1, 1);
+    auto thresholdRange = NormalisableRange<float>(SimpleMBComp::MIN_THRESHOLD, SimpleMBComp::MAX_DB, 1, 1);
     layout.add(std::make_unique<AudioParameterFloat>(params.at(Names::Threshold_Low_Band),
                                                      params.at(Names::Threshold_Low_Band),
                                                      thresholdRange,
@@ -525,12 +525,12 @@ juce::AudioProcessorValueTreeState::ParameterLayout SimpleMBCompAudioProcessor::
     
     layout.add(std::make_unique<AudioParameterFloat>(params.at(Names::Low_Mid_Crossover_Freq),
                                                      params.at(Names::Low_Mid_Crossover_Freq),
-                                                     NormalisableRange<float>(MIN_FREQUENCY, 999, 1, 1),
+                                                     NormalisableRange<float>(SimpleMBComp::MIN_FREQUENCY, 999, 1, 1),
                                                      400));
     
     layout.add(std::make_unique<AudioParameterFloat>(params.at(Names::Mid_High_Crossover_Freq),
                                                      params.at(Names::Mid_High_Crossover_Freq),
-                                                     NormalisableRange<float>(1000, MAX_FREQUENCY, 1, 1),
+                                                     NormalisableRange<float>(1000, SimpleMBComp::MAX_FREQUENCY, 1, 1),
                                                      2000));
     
     return layout;

@@ -35,8 +35,8 @@ struct CompressorBand
 private:
     juce::dsp::Compressor<float> compressor;
     
-    std::atomic<float> rmsInputLevelDb { NEGATIVE_INFINITY };
-    std::atomic<float> rmsOutputLevelDb { NEGATIVE_INFINITY };
+    std::atomic<float> rmsInputLevelDb { SimpleMBComp::NEG_INFINITY };
+    std::atomic<float> rmsOutputLevelDb { SimpleMBComp::NEG_INFINITY };
     
     template<typename T>
     float computeRMSLevel(const T& buffer)

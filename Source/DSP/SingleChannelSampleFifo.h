@@ -14,6 +14,8 @@
 
 #include "Fifo.h"
 
+namespace SimpleMBComp
+{
 enum Channel
 {
     Left, //effectively 0
@@ -83,3 +85,5 @@ private:
         ++fifoIndex;
     }
 };
+
+} //end namespace SimpleMBComp

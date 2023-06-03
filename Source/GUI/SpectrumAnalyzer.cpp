@@ -12,7 +12,8 @@
 #include "Utilities.h"
 #include "../DSP/Params.h"
 #include "LookAndFeel.h"
-
+namespace SimpleMBComp
+{
 //==============================================================================
 SpectrumAnalyzer::SpectrumAnalyzer(juce::AudioProcessor& processor, SCSF& leftChannelFifo, SCSF& rightChannelFifo) :
 sampleRate(processor.getSampleRate()),
@@ -78,8 +79,8 @@ std::vector<float> SpectrumAnalyzer::getGains()
 {
     std::vector<float> values;
     
-    auto increment = juce::jmin(12.f, MAX_DECIBELS); //12 db steps
-    for( auto db = NEGATIVE_INFINITY; db <= MAX_DECIBELS; db += increment)
+    auto increment = juce::jmin(12.f, MAX_DB); //12 db steps
+    for( auto db = NEG_INFINITY; db <= MAX_DB; db += increment)
     {
         values.push_back(db);
     }
@@ -124,7 +125,7 @@ void SpectrumAnalyzer::drawBackgroundGrid(juce::Graphics &g,
     
     for( auto gDb : gain )
     {
-        auto y = jmap(gDb, NEGATIVE_INFINITY, MAX_DECIBELS,
+        auto y = jmap(gDb, SimpleMBComp::NEG_INFINITY, SimpleMBComp::MAX_DB,
                       float(bottom), float(top));
         
         g.setColour(gDb == 0.f ? ColorScheme::getSliderRangeTextColor().withAlpha(0.75f) : ColorScheme::getAnalyzerGridColor() );
@@ -182,7 +183,7 @@ void SpectrumAnalyzer::drawTextLabels(juce::Graphics &g, juce::Rectangle<int> bo
 
     for( auto gDb : gain )
     {
-        auto y = jmap(gDb, NEGATIVE_INFINITY, MAX_DECIBELS,
+        auto y = jmap(gDb, SimpleMBComp::NEG_INFINITY, SimpleMBComp::MAX_DB,
                       float(bottom), float(top));
         
         String str;
@@ -214,7 +215,7 @@ void SpectrumAnalyzer::resized()
     auto fftBounds = SpectrumAnalyzerUtils::getAnalysisArea(bounds).toFloat();
     auto negInf = jmap(bounds.toFloat().getBottom(),
                        fftBounds.getBottom(), fftBounds.getY(),
-                       NEGATIVE_INFINITY, MAX_DECIBELS);
+                       SimpleMBComp::NEG_INFINITY, SimpleMBComp::MAX_DB);
     DBG( "Negative infinity: " << negInf );
     leftPathProducer.updateNegativeInfinity(negInf);
     rightPathProducer.updateNegativeInfinity(negInf);
@@ -359,3 +360,4 @@ void MBCompAnalyzerOverlay::timerCallback()
 {
     repaint();
 }
+} //end namespace SimpleMBComp

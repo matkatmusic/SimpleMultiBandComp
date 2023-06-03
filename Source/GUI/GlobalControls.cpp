@@ -21,7 +21,7 @@ GlobalControls::GlobalControls(juce::AudioProcessorValueTreeState& apvts)
     
     auto getParamHelper = [&params, &apvts](const auto& name) -> auto&
     {
-        return getParam(apvts, params, name);
+        return SimpleMBComp::getParam(apvts, params, name);
     };
     
     auto& gainInParam = getParamHelper(Names::Gain_In);
@@ -47,7 +47,7 @@ GlobalControls::GlobalControls(juce::AudioProcessorValueTreeState& apvts)
                                                   const auto& name,
                                                   auto& slider)
     {
-        makeAttachment(attachment, apvts, params, name, slider);
+        SimpleMBComp::makeAttachment(attachment, apvts, params, name, slider);
     };
     
     makeAttachmentHelper(inGainSliderAttachment,
@@ -66,18 +66,18 @@ GlobalControls::GlobalControls(juce::AudioProcessorValueTreeState& apvts)
                          Names::Gain_Out,
                          *outGainSlider);
     
-    addLabelPairs(inGainSlider->labels,
-                  gainInParam,
-                  "dB");
-    addLabelPairs(lowMidXoverSlider->labels,
-                  lowMidParam,
-                  "Hz");
-    addLabelPairs(midHighXoverSlider->labels,
-                  midHighParam,
-                  "Hz");
-    addLabelPairs(outGainSlider->labels,
-                  gainOutParam,
-                  "dB");
+    SimpleMBComp::addLabelPairs(inGainSlider->labels,
+                                gainInParam,
+                                "dB");
+    SimpleMBComp::addLabelPairs(lowMidXoverSlider->labels,
+                                lowMidParam,
+                                "Hz");
+    SimpleMBComp::addLabelPairs(midHighXoverSlider->labels,
+                                midHighParam,
+                                "Hz");
+    SimpleMBComp::addLabelPairs(outGainSlider->labels,
+                                gainOutParam,
+                                "dB");
     
     addAndMakeVisible(*inGainSlider);
     addAndMakeVisible(*lowMidXoverSlider);
@@ -89,7 +89,7 @@ void GlobalControls::paint(juce::Graphics &g)
 {
     auto bounds = getLocalBounds();
     
-    drawModuleBackground(g, bounds);
+    SimpleMBComp::drawModuleBackground(g, bounds);
 }
 
 void GlobalControls::resized()

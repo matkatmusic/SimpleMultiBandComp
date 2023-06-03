@@ -15,6 +15,9 @@
 #include "Utilities.h"
 #include "../DSP/Fifo.h"
 
+namespace SimpleMBComp
+{
+
 template<typename BlockType>
 struct FFTDataGenerator
 {
@@ -99,3 +102,5 @@ private:
     
     Fifo<BlockType> fftDataFifo;
 };
+
+} //end namespace SimpleMBComp

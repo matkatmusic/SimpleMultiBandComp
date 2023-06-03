@@ -14,6 +14,8 @@
 
 #include "PathProducer.h"
 
+namespace SimpleMBComp
+{
 struct SpectrumAnalyzerUtils
 {
     static juce::Rectangle<int> getRenderArea(juce::Rectangle<int> bounds);
@@ -87,3 +89,5 @@ struct MBCompAnalyzerOverlay : juce::Component, juce::Timer
     float midBandGR { 0.f };
     float highBandGR { 0.f };
 };
+
+} //end namespace SimpleMBComp

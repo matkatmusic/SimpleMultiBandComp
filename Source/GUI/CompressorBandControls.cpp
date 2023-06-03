@@ -162,7 +162,7 @@ void CompressorBandControls::resized()
 void CompressorBandControls::paint(juce::Graphics &g)
 {
     auto bounds = getLocalBounds();
-    drawModuleBackground(g, bounds);
+    SimpleMBComp::drawModuleBackground(g, bounds);
 }
 
 void CompressorBandControls::buttonClicked(juce::Button *button)
@@ -236,7 +236,7 @@ void CompressorBandControls::updateBandSelectButtonStates()
     const auto& params = GetParams();
     auto paramHelper = [&params, this](const auto& name)
     {
-        return dynamic_cast<juce::AudioParameterBool*>(&getParam(apvts, params, name));
+        return dynamic_cast<juce::AudioParameterBool*>(&SimpleMBComp::getParam(apvts, params, name));
     };
     
     for( size_t i = 0; i < paramsToCheck.size(); ++i )
@@ -383,7 +383,7 @@ void CompressorBandControls::updateAttachments()
     
     auto getParamHelper = [&params, &apvts = this->apvts, &names](const auto& pos) -> auto&
     {
-        return getParam(apvts, params, names.at(pos));
+        return SimpleMBComp::getParam(apvts, params, names.at(pos));
     };
     
     attackSliderAttachment.reset();
@@ -395,15 +395,15 @@ void CompressorBandControls::updateAttachments()
     muteButtonAttachment.reset();
     
     auto& attackParam = getParamHelper(Pos::Attack);
-    addLabelPairs(attackSlider.labels, attackParam, "ms");
+    SimpleMBComp::addLabelPairs(attackSlider.labels, attackParam, "ms");
     attackSlider.changeParam(&attackParam);
     
     auto& releaseParam = getParamHelper(Pos::Release);
-    addLabelPairs(releaseSlider.labels, releaseParam, "ms");
+    SimpleMBComp::addLabelPairs(releaseSlider.labels, releaseParam, "ms");
     releaseSlider.changeParam(&releaseParam);
     
     auto& threshParam = getParamHelper(Pos::Threshold);
-    addLabelPairs(thresholdSlider.labels, threshParam, "dB");
+    SimpleMBComp::addLabelPairs(thresholdSlider.labels, threshParam, "dB");
     thresholdSlider.changeParam(&threshParam);
     
     auto& ratioParamRap = getParamHelper(Pos::Ratio);
@@ -418,7 +418,7 @@ void CompressorBandControls::updateAttachments()
                                                                 const auto& name,
                                                                 auto& slider)
     {
-        makeAttachment(attachment, apvts, params, name, slider);
+        SimpleMBComp::makeAttachment(attachment, apvts, params, name, slider);
     };
     
     makeAttachmentHelper(attackSliderAttachment, names[Pos::Attack], attackSlider);

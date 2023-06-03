@@ -12,6 +12,8 @@
 
 #include "LookAndFeel.h"
 
+namespace SimpleMBComp
+{
 juce::String getValString(const juce::RangedAudioParameter& param,
                           bool getLow,
                           juce::String suffix)
@@ -54,3 +56,4 @@ void drawModuleBackground(juce::Graphics &g,
     
     g.drawRect(localBounds);
 }
+} //end namespace SimpleMBComp

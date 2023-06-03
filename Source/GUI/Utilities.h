@@ -12,13 +12,15 @@
 
 #include <JuceHeader.h>
 
-#define MIN_FREQUENCY 20.f
-#define MAX_FREQUENCY 20000.f
+namespace SimpleMBComp
+{
+static constexpr float MIN_FREQUENCY = 20.f;
+static constexpr float MAX_FREQUENCY = 20000.f;
 
-#define NEGATIVE_INFINITY -72.f
-#define MAX_DECIBELS 24.f
+static constexpr float NEG_INFINITY = -72.f;
+static constexpr float MAX_DB = 24.f;
 
-#define MIN_THRESHOLD -60.f
+static constexpr float MIN_THRESHOLD = -60.f;
 
 enum FFTOrder
 {
@@ -90,7 +92,7 @@ template<typename FloatType>
 FloatType mapY(FloatType value, FloatType bottom, FloatType top)
 {
     auto y = juce::jmap(value,
-                        static_cast<FloatType>(NEGATIVE_INFINITY), static_cast<FloatType>(MAX_DECIBELS),
+                        static_cast<FloatType>(NEG_INFINITY), static_cast<FloatType>(MAX_DB),
                         bottom, top);
     return y;
 }
@@ -109,3 +111,4 @@ juce::Rectangle<int> getModuleBackgroundArea(juce::Rectangle<int> bounds);
 
 void drawModuleBackground(juce::Graphics &g,
                                           juce::Rectangle<int> bounds);
+} //end namespace SimpleMBComp

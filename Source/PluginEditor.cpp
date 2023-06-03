@@ -52,7 +52,7 @@ SimpleMBCompAudioProcessorEditor::SimpleMBCompAudioProcessorEditor (SimpleMBComp
     addAndMakeVisible(controlBar);
     addAndMakeVisible(analyzer);
     
-    overlay = std::make_unique<MBCompAnalyzerOverlay>(*audioProcessor.lowMidCrossover,
+    overlay = std::make_unique<SimpleMBComp::MBCompAnalyzerOverlay>(*audioProcessor.lowMidCrossover,
                                                       *audioProcessor.midHighCrossover,
                                                       *audioProcessor.lowThresholdParam,
                                                       *audioProcessor.midThresholdParam,

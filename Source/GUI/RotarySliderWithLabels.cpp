@@ -102,7 +102,7 @@ juce::String RotarySliderWithLabels::getDisplayString() const
     {
         auto val = getValue();
         
-        addK = truncateKiloValue(val);
+        addK = SimpleMBComp::truncateKiloValue(val);
         
         str = juce::String(val, (addK ? 2 : 0));
     }

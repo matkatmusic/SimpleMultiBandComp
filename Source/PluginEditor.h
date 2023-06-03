@@ -55,8 +55,8 @@ private:
     ControlBar controlBar;
     GlobalControls globalControls { audioProcessor.apvts };
     CompressorBandControls bandControls { audioProcessor.apvts };
-    SpectrumAnalyzer analyzer { audioProcessor, audioProcessor.leftChannelFifo, audioProcessor.rightChannelFifo };
-    std::unique_ptr<MBCompAnalyzerOverlay> overlay;
+    SimpleMBComp::SpectrumAnalyzer analyzer { audioProcessor, audioProcessor.leftChannelFifo, audioProcessor.rightChannelFifo };
+    std::unique_ptr<SimpleMBComp::MBCompAnalyzerOverlay> overlay;
     
     void toggleGlobalBypassState();
     
