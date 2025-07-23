@@ -25,9 +25,14 @@ enum Channel
 template<typename BlockType>
 struct SingleChannelSampleFifo
 {
-    SingleChannelSampleFifo(Channel ch) : channelToUse(ch)
+    SingleChannelSampleFifo(int channelToUse_) : channelToUse(channelToUse_)
     {
+        jassert(channelToUse >= 0 );
         prepared.set(false);
+    }
+    SingleChannelSampleFifo(Channel ch) : SingleChannelSampleFifo(ch == Channel::Left ? 0 : 1)
+    {
+        
     }
     
     void update(const BlockType& buffer)
@@ -63,7 +68,7 @@ struct SingleChannelSampleFifo
     //==============================================================================
     bool getAudioBuffer(BlockType& buf) { return audioBufferFifo.pull(buf); }
 private:
-    Channel channelToUse;
+    const int channelToUse;
     int fifoIndex = 0;
     Fifo<BlockType> audioBufferFifo;
     BlockType bufferToFill;
