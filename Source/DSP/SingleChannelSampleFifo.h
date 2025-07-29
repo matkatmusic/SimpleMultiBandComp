@@ -22,7 +22,7 @@ enum Channel
     Right, //effectively 1
 };
 
-template<typename BlockType>
+template<typename BlockType, int FifoCapacity = 30>
 struct SingleChannelSampleFifo
 {
     SingleChannelSampleFifo(int channelToUse_) : channelToUse(channelToUse_)
@@ -70,7 +70,7 @@ struct SingleChannelSampleFifo
 private:
     const int channelToUse;
     int fifoIndex = 0;
-    Fifo<BlockType> audioBufferFifo;
+    Fifo<BlockType, FifoCapacity> audioBufferFifo;
     BlockType bufferToFill;
     juce::Atomic<bool> prepared = false;
     juce::Atomic<int> size = 0;
