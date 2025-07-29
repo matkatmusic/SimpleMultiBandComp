@@ -80,8 +80,12 @@ private:
         if (fifoIndex == bufferToFill.getNumSamples())
         {
             auto ok = audioBufferFifo.push(bufferToFill);
-
-            juce::ignoreUnused(ok);
+            if( !ok )
+            {
+#if JUCE_DEBUG
+                juce::Logger::writeToLog("Warning: Single Channel Sample FIFO audioBufferFifo is full!!  the consuming thread isn't consuming buffers fast enough");
+#endif
+            }
             
             fifoIndex = 0;
         }
