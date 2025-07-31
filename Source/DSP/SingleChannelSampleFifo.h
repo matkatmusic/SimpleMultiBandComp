@@ -67,6 +67,7 @@ struct SingleChannelSampleFifo
     int getSize() const { return size.get(); }
     //==============================================================================
     bool getAudioBuffer(BlockType& buf) { return audioBufferFifo.pull(buf); }
+    int getChannelToUse() const { return channelToUse; }
 private:
     const int channelToUse;
     int fifoIndex = 0;
