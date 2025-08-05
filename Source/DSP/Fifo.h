@@ -29,6 +29,8 @@ struct IsReferenceCountedArray<juce::ReferenceCountedArray<T>> : std::true_type 
 template<typename T, size_t Size = 30>
 struct Fifo
 {
+    size_t getCapacity() const { return Size; }
+    
     void prepare(int numChannels, int numSamples)
     {
         static_assert( std::is_same_v<T, juce::AudioBuffer<float>>,
