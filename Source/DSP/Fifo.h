@@ -46,6 +46,14 @@ struct Fifo
         }
     }
     
+    void prepareUsing(std::function<void(T&)>&& prepareFunc)
+    {
+        for( auto& buffer : buffers )
+        {
+            prepareFunc(buffer);
+        }
+    }
+    
     void prepare(size_t numElements)
     {
         static_assert( std::is_same_v<T, std::vector<float>>,

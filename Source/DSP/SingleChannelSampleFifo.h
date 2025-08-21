@@ -57,7 +57,12 @@ struct SingleChannelSampleFifo
                              false,         //keepExistingContent
                              true,          //clear extra space
                              true);         //avoid reallocating
-        audioBufferFifo.prepare(1, bufferSize);
+        audioBufferFifo.prepareUsing([bufferSize](BlockType& b)
+                                     {
+            b.setSize(1, bufferSize);
+            b.clear();
+        });
+//        audioBufferFifo.prepare(1, bufferSize);
         fifoIndex = 0;
         prepared.set(true);
     }
