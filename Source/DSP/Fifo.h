@@ -65,6 +65,20 @@ struct Fifo
         }
     }
     
+    bool pushWithModification(const T& t, std::function<void(T&)>&& modifyFunc)
+    {
+        auto write = fifo.write(1);
+        if( write.blockSize1 > 0 )
+        {
+            auto copy = t;
+            modifyFunc(copy);
+            buffers[static_cast<size_t>(write.startIndex1)] = std::move(copy);
+            return true;
+        }
+        
+        return false;
+    }
+    
     bool push(const T& t)
     {
         auto write = fifo.write(1);
