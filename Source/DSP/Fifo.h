@@ -145,6 +145,11 @@ struct Fifo
     {
         return fifo.getNumReady();
     }
+    
+    int getFreeSpace() const
+    {
+        return fifo.getFreeSpace();
+    }
 private:
     std::array<T, Size> buffers;
     juce::AbstractFifo fifo {Size};
