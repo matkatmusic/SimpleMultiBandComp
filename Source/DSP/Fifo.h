@@ -29,6 +29,7 @@ struct IsReferenceCountedArray<juce::ReferenceCountedArray<T>> : std::true_type 
 template<typename T, size_t Size = 30>
 struct Fifo
 {
+    using Type = T;
     size_t getCapacity() const { return Size; }
     
     void prepare(int numChannels, int numSamples)
