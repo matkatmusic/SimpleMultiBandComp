@@ -66,7 +66,10 @@ struct Fifo
         }
     }
     
-    bool pushWithModification(const T& t, std::function<void(T&)>&& modifyFunc)
+    template<typename ModifyFunc>
+    requires std::is_invocable_v<ModifyFunc, T&>
+    bool pushWithModification(const T& t,
+                              ModifyFunc&& modifyFunc)
     {
         auto write = fifo.write(1);
         if( write.blockSize1 > 0 )
