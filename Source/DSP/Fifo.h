@@ -26,16 +26,40 @@ struct IsReferenceCountedArray : std::false_type { };
 template<typename T>
 struct IsReferenceCountedArray<juce::ReferenceCountedArray<T>> : std::true_type { };
 
+template<typename T>
+concept HasSetSize = requires(T t, int chan, int samp)
+{
+    { t.setSize(chan, samp) };
+};
+
+template<typename T>
+concept HasResize = requires( T t, size_t num )
+{
+    { t.resize(num) };
+};
+
+template<typename T>
+concept HasSize = requires( T t )
+{
+    { t.size() } -> std::same_as<size_t>;
+};
+
+template<typename T>
+concept HasGetNumSamples = requires( T t )
+{
+    { t.getNumSamples() } -> std::same_as<int>;
+};
+
 template<typename T, size_t Size = 30>
 struct Fifo
 {
     using Type = T;
     size_t getCapacity() const { return Size; }
     
+    template<typename BufferType = T>
+    requires( HasSetSize<BufferType> )
     void prepare(int numChannels, int numSamples)
     {
-        static_assert( std::is_same_v<T, juce::AudioBuffer<float>>,
-                      "prepare(numChannels, numSamples) should only be used when the Fifo is holding juce::AudioBuffer<float>");
         for( auto& buffer : buffers)
         {
             buffer.setSize(numChannels,
@@ -55,10 +79,10 @@ struct Fifo
         }
     }
     
+    template<typename VectorType = T>
+    requires( HasResize<VectorType> )
     void prepare(size_t numElements)
     {
-        static_assert( std::is_same_v<T, std::vector<float>>,
-                      "prepare(numElements) should only be used when the Fifo is holding std::vector<float>");
         for( auto& buffer : buffers )
         {
             buffer.clear();
@@ -125,7 +149,7 @@ struct Fifo
                 std::swap(buffers[idx], t);
                 jassert( buffers[idx].size() == 0 );
             }
-            else if constexpr (std::is_same_v<T, std::vector<float>>)
+            else if constexpr ( HasSize<T> )
             {
                 if( t.size() < buffers[idx].size() )
                 {
@@ -136,7 +160,7 @@ struct Fifo
                     std::swap( t, buffers[idx] ); //ok to swap.
                 }
             }
-            else if constexpr( std::is_same_v<T, juce::AudioBuffer<float>> )
+            else if constexpr( HasGetNumSamples<T> )
             {
                 if( t.getNumSamples() < buffers[idx].getNumSamples() )
                 {
