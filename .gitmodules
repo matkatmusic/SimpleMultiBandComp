@@ -1,3 +1,6 @@
 [submodule "JUCE"]
 	path = JUCE
 	url = https://github.com/juce-framework/JUCE.git
+[submodule "MatkatUtilities"]
+	path = MatkatUtilities
+	url = https://github.com/matkatmusic/MatkatUtilities.git
