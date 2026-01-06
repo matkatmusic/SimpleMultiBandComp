@@ -2,7 +2,7 @@
 
 <JUCERPROJECT id="FRIkNA" name="SimpleMBComp" projectType="audioplug" useAppConfig="0"
               addUsingNamespaceToJuceHeader="0" jucerFormatVersion="1" companyName="Matkat Music LLC"
-              cppLanguageStandard="17" pluginChannelConfigs="{2, 2}" pluginManufacturerCode="Mktm"
+              cppLanguageStandard="20" pluginChannelConfigs="{2, 2}" pluginManufacturerCode="Mktm"
               pluginCode="Smbc">
   <MAINGROUP id="WJQ1Qu" name="SimpleMBComp">
     <GROUP id="{1E3DBD95-203C-E6C3-3E30-613AF7AD684F}" name="Source">
