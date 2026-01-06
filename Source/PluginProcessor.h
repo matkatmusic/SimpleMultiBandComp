@@ -30,7 +30,7 @@ GUI RoadMap:
 
 #include <JuceHeader.h>
 #include "DSP/CompressorBand.h"
-#include "DSP/SingleChannelSampleFifo.h"
+#include <SingleChannelSampleFifo.h>
 
 
 

@@ -6,16 +6,20 @@
               pluginCode="Smbc">
   <MAINGROUP id="WJQ1Qu" name="SimpleMBComp">
     <GROUP id="{1E3DBD95-203C-E6C3-3E30-613AF7AD684F}" name="Source">
+      <GROUP id="{732BA826-4272-A475-5629-5B0CC65C2689}" name="MatkatUtilities">
+        <GROUP id="{38FBF368-1AEB-D360-CF94-26B5CDCAC61E}" name="AudioUtilities">
+          <FILE id="omfOyU" name="Fifo.h" compile="0" resource="0" file="MatkatUtilities/ThreadUtilities/Fifo.h"/>
+          <FILE id="NDabe1" name="SingleChannelSampleFifo.h" compile="0" resource="0"
+                file="MatkatUtilities/ThreadUtilities/SingleChannelSampleFifo.h"/>
+        </GROUP>
+      </GROUP>
       <GROUP id="{A4656141-74FD-DD06-16E7-5B3550CAC9D2}" name="DSP">
         <FILE id="Plf9Ye" name="CompressorBand.cpp" compile="1" resource="0"
               file="Source/DSP/CompressorBand.cpp"/>
         <FILE id="ufahww" name="CompressorBand.h" compile="0" resource="0"
               file="Source/DSP/CompressorBand.h"/>
-        <FILE id="OSY7Yx" name="Fifo.h" compile="0" resource="0" file="Source/DSP/Fifo.h"/>
         <FILE id="vnqMeg" name="Params.cpp" compile="1" resource="0" file="Source/DSP/Params.cpp"/>
         <FILE id="yN5mta" name="Params.h" compile="0" resource="0" file="Source/DSP/Params.h"/>
-        <FILE id="BsHE3J" name="SingleChannelSampleFifo.h" compile="0" resource="0"
-              file="Source/DSP/SingleChannelSampleFifo.h"/>
       </GROUP>
       <GROUP id="{64547AF7-CBFF-F1B8-50E4-ADA84CBA304F}" name="GUI">
         <FILE id="IwpOEd" name="AnalyzerPathGenerator.h" compile="0" resource="0"
@@ -66,7 +70,8 @@
   <EXPORTFORMATS>
     <XCODE_MAC targetFolder="Builds/MacOSX">
       <CONFIGURATIONS>
-        <CONFIGURATION isDebug="1" name="Debug" targetName="SimpleMBComp" recommendedWarnings="LLVM"/>
+        <CONFIGURATION isDebug="1" name="Debug" targetName="SimpleMBComp" recommendedWarnings="LLVM"
+                       headerPath="../../MatkatUtilities/&#10;../../MatkatUtilities/ThreadUtilities/"/>
         <CONFIGURATION isDebug="0" name="Release" targetName="SimpleMBComp"/>
       </CONFIGURATIONS>
       <MODULEPATHS>

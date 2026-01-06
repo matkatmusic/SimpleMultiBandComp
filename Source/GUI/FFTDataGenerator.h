@@ -13,7 +13,7 @@
 #include <JuceHeader.h>
 
 #include "Utilities.h"
-#include "../DSP/Fifo.h"
+#include <Fifo.h>
 
 namespace SimpleMBComp
 {
