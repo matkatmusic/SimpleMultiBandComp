@@ -30,19 +30,19 @@ ratioSlider(nullptr, "")
     soloButton.addListener(this);
     muteButton.addListener(this);
     
-    bypassButton.setName("X");
+    bypassButton.setButtonText("X");
     bypassButton.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                            juce::Colours::yellow);
     bypassButton.setColour(juce::TextButton::ColourIds::buttonColourId,
                            juce::Colours::black);
     
-    soloButton.setName("S");
+    soloButton.setButtonText("S");
     soloButton.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                          juce::Colours::limegreen);
     soloButton.setColour(juce::TextButton::ColourIds::buttonColourId,
                          juce::Colours::black);
     
-    muteButton.setName("M");
+    muteButton.setButtonText("M");
     muteButton.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                          juce::Colours::red);
     muteButton.setColour(juce::TextButton::ColourIds::buttonColourId,
@@ -52,19 +52,19 @@ ratioSlider(nullptr, "")
     addAndMakeVisible(soloButton);
     addAndMakeVisible(muteButton);
     
-    lowBand.setName("Low");
+    lowBand.setButtonText("Low");
     lowBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                       ColorScheme::getSliderBorderColor());
     lowBand.setColour(juce::TextButton::ColourIds::buttonColourId,
                       juce::Colours::black);
     
-    midBand.setName("Mid");
+    midBand.setButtonText("Mid");
     midBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                       ColorScheme::getSliderBorderColor());
     midBand.setColour(juce::TextButton::ColourIds::buttonColourId,
                       juce::Colours::black);
     
-    highBand.setName("High");
+    highBand.setButtonText("High");
     highBand.setColour(juce::TextButton::ColourIds::buttonOnColourId,
                        ColorScheme::getSliderBorderColor());
     highBand.setColour(juce::TextButton::ColourIds::buttonColourId,
