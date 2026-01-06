@@ -100,6 +100,7 @@ juce::String RotarySliderWithLabels::getDisplayString() const
     
     if( auto* floatParam = dynamic_cast<juce::AudioParameterFloat*>(param) )
     {
+        juce::ignoreUnused(floatParam);
         auto val = getValue();
         
         addK = SimpleMBComp::truncateKiloValue(val);

@@ -84,6 +84,7 @@ void LookAndFeel::drawToggleButton(juce::Graphics &g,
     
     if( auto* pb = dynamic_cast<PowerButton*>(&toggleButton) )
     {
+        juce::ignoreUnused(pb);
         Path powerButton;
         
         auto bounds = toggleButton.getLocalBounds();
