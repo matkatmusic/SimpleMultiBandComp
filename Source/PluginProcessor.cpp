@@ -26,9 +26,9 @@ SimpleMBCompAudioProcessor::SimpleMBCompAudioProcessor()
     using namespace Params;
     const auto& params = GetParams();
     
-    auto floatHelper = [&apvts = this->apvts, &params](auto& param, const auto& paramName)
+    auto floatHelper = [&apvts_ = this->apvts, &params](auto& param, const auto& paramName)
     {
-        param = dynamic_cast<juce::AudioParameterFloat*>(apvts.getParameter(params.at(paramName)));
+        param = dynamic_cast<juce::AudioParameterFloat*>(apvts_.getParameter(params.at(paramName)));
         jassert(param != nullptr);
     };
     
@@ -48,9 +48,9 @@ SimpleMBCompAudioProcessor::SimpleMBCompAudioProcessor()
     midThresholdParam = midBandComp.threshold;
     highThresholdParam = highBandComp.threshold;
     
-    auto choiceHelper = [&apvts = this->apvts, &params](auto& param, const auto& paramName)
+    auto choiceHelper = [&apvts_ = this->apvts, &params](auto& param, const auto& paramName)
     {
-        param = dynamic_cast<juce::AudioParameterChoice*>(apvts.getParameter(params.at(paramName)));
+        param = dynamic_cast<juce::AudioParameterChoice*>(apvts_.getParameter(params.at(paramName)));
         jassert(param != nullptr);
     };
     
@@ -58,9 +58,9 @@ SimpleMBCompAudioProcessor::SimpleMBCompAudioProcessor()
     choiceHelper(midBandComp.ratio, Names::Ratio_Mid_Band);
     choiceHelper(highBandComp.ratio, Names::Ratio_High_Band);
     
-    auto boolHelper = [&apvts = this->apvts, &params](auto& param, const auto& paramName)
+    auto boolHelper = [&apvts_ = this->apvts, &params](auto& param, const auto& paramName)
     {
-        param = dynamic_cast<juce::AudioParameterBool*>(apvts.getParameter(params.at(paramName)));
+        param = dynamic_cast<juce::AudioParameterBool*>(apvts_.getParameter(params.at(paramName)));
         jassert(param != nullptr);
     };
     

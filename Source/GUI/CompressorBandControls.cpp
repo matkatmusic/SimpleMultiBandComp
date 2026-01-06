@@ -74,9 +74,9 @@ ratioSlider(nullptr, "")
     midBand.setRadioGroupId(1);
     highBand.setRadioGroupId(1);
     
-    auto buttonSwitcher = [safePtr = this->safePtr]()
+    auto buttonSwitcher = [safePtr_ = this->safePtr]()
     {
-        if( auto* c = safePtr.getComponent() )
+        if( auto* c = safePtr_.getComponent() )
         {
             c->updateAttachments();
         }
@@ -381,9 +381,9 @@ void CompressorBandControls::updateAttachments()
     
     const auto& params = GetParams();
     
-    auto getParamHelper = [&params, &apvts = this->apvts, &names](const auto& pos) -> auto&
+    auto getParamHelper = [&params, &apvts_ = this->apvts, &names](const auto& pos) -> auto&
     {
-        return SimpleMBComp::getParam(apvts, params, names.at(pos));
+        return SimpleMBComp::getParam(apvts_, params, names.at(pos));
     };
     
     attackSliderAttachment.reset();
@@ -414,11 +414,11 @@ void CompressorBandControls::updateAttachments()
         juce::String(ratioParam->choices.getReference(ratioParam->choices.size() - 1).getIntValue()) + ":1" });
     ratioSlider.changeParam(ratioParam);
     
-    auto makeAttachmentHelper = [&params, &apvts = this->apvts](auto& attachment,
+    auto makeAttachmentHelper = [&params, &apvts_ = this->apvts](auto& attachment,
                                                                 const auto& name,
                                                                 auto& slider)
     {
-        SimpleMBComp::makeAttachment(attachment, apvts, params, name, slider);
+        SimpleMBComp::makeAttachment(attachment, apvts_, params, name, slider);
     };
     
     makeAttachmentHelper(attackSliderAttachment, names[Pos::Attack], attackSlider);
